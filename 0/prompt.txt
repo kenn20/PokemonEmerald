@@ -1,0 +1,78 @@
+# AGENTS.md instructions
+
+<INSTRUCTIONS>
+<!-- catstack-draft-pr -->
+# Creating PRs (apply everywhere)
+
+When asked to make, open, create, publish, or update a PR, read the
+`draft-pr` skill first (`engine/skills/draft-pr/SKILL.md` or the installed
+`draft-pr` skill). If the current repo has `engine/skills/make-pr/SKILL.md`, use
+that overlay. Do not draft title or body from the latest commit message, and
+do not use a generic `gh pr create` Summary / Test plan template.
+
+Slash commands `/pr-skill`, `/draft-pr`, and `/make-pr` all enter this skill.
+<!-- /catstack-draft-pr -->
+
+<!-- catstack-create-skill -->
+# Creating skills (apply everywhere)
+
+When asked to create, add, install, or author a skill, or when about to write
+a new `SKILL.md` / home-link a skill directory, read the `create-skill` skill
+first (`engine/skills/create-skill/SKILL.md` or the installed `create-skill` skill).
+
+A skill MUST be available to Claude, Cursor, and Codex unless it is listed in
+`CLAUDE_ONLY_SKILLS` in catstack `install.sh`. Prefer catstack
+`product/skills/<name>/` (or corpus) + `./install.sh`. Project-skill home links MUST hit all three
+roots (`scripts/install/link_skill_three_harnesses.sh`). Do not follow Cursor-only
+`~/.cursor/skills/` install advice.
+<!-- /catstack-create-skill -->
+
+<!-- catstack-named-constraints -->
+# Named constraints (apply everywhere)
+
+When the user names a verb or a done-gate, obey that — do not substitute a
+near-neighbor.
+
+- **Obey the named verb.** If they said create a repro, add a test, delete
+  the cron, or stop — do that thing. Do not "fix first" or narrate instead.
+- **Repro, then fix.** A passing-only script is not a repro. Show fail
+  before the change and pass after, both outputs pasted.
+- **UI proof before done.** Visible UI/layout work is not done on a
+  screenshot or a code-only pass. Follow `visual-proof`: exercise the
+  changed flow end to end the way a user would.
+- **E2e / test before claiming pass.** If they asked for a test, the claim
+  "it works" is false until that test (or the named e2e) has a real
+  pass/fail line in the same message.
+- **Persist through done.** After direction is set, keep taking the next safe,
+  in-scope step until the requested outcome is complete. Do not pause merely
+  to ask whether to continue. Stop when a real blocker prevents progress or
+  before an action that needs new authority. Persistence never supplies
+  authority to commit, push, open or update a PR, merge, deploy, or take a
+  destructive action.
+- **Literal question first.** Answer the user's literal question before
+  related context or adjacent work.
+<!-- /catstack-named-constraints -->
+
+<!-- catstack-evidence-check -->
+# Evidence check (apply everywhere)
+
+A Grep or name hit is **not** a check.
+
+- Do not cite a file, line, or "the bug is X" until this turn's Read or
+  command output is in the same message.
+- If two files could match, Read both before picking one.
+- Run the check. Only when it cannot run, tag the claim `{{CAT-UNVERIFIED: <claim> -- cannot verify: <reason>}}`; bare `UNVERIFIED:` is retired and excuses nothing.
+- "My earlier check was wrong" means the claim went out before the check —
+  that is a process failure, not a polite recovery. The
+  `wrong-check-reflect` hook will force `/reflect` when it sees that
+  admission.
+<!-- /catstack-evidence-check -->
+</INSTRUCTIONS>
+
+<environment_context>
+  <cwd>/home/kennc/Document/Github/PokemonEmerald</cwd>
+  <shell>bash</shell>
+  <current_date>2026-09-20</current_date>
+  <timezone>America/Los_Angeles</timezone>
+  <filesystem><workspace_roots><root>/home/kennc/Document/Github/PokemonEmerald</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
