@@ -1,0 +1,10 @@
+<environment_context>
+  <current_date>2026-09-21</current_date>
+  <timezone>America/Los_Angeles</timezone>
+  <filesystem><workspace_roots><root>/home/kennc/Document/Github/PokemonEmerald</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <subagents>
+    <agent name="/root/emerald_feasibility" />
+    <agent name="/root/repo_architecture" />
+    <agent name="/root/state_and_controls" />
+  </subagents>
+</environment_context>
