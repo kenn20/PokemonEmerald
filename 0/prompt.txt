@@ -1,0 +1,9 @@
+Rught now, we want to start by essentially referring to Pokemon Red's harness, and build our own/modify our own. https://github.com/christianmat/jev-pokemon That would be first step. Now, we need to break it even further down into what is the subgoals we can see and how we can achieve it and verify it.
+
+---
+
+use a subagent: https://github.com/mgba-emu/mgba. https://mgba.io/docs/scripting.html, explore the EXISTIGN bridge. If need to, also explore outside, and on github.com.
+
+---
+
+whats the end result?
