@@ -3,14 +3,11 @@
   "checkpoint_id": "01M3FZR7QVBAH1SABENYT81WQR",
   "strategy": "manual-commit",
   "branch": "codex/phase1-pyboy-title-gate",
-  "checkpoints_count": 9,
+  "checkpoints_count": 1,
   "files_touched": [
     ".gitignore",
-    "prototype.py",
     "pyboy_adapter.py",
-    "pytest.ini",
-    "requirements.txt",
-    "tests/test_phase1.py"
+    "pytest.ini"
   ],
   "sessions": [
     {
@@ -22,18 +19,10 @@
     }
   ],
   "token_usage": {
-    "input_tokens": 671459,
+    "input_tokens": 5002,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 12576256,
-    "output_tokens": 44261,
-    "api_call_count": 122,
-    "subagent_tokens": {
-      "input_tokens": 81024,
-      "cache_creation_tokens": 0,
-      "cache_read_tokens": 930816,
-      "output_tokens": 4023,
-      "api_call_count": 16
-    },
-    "subagent_tokens_complete": true
+    "cache_read_tokens": 152192,
+    "output_tokens": 2539,
+    "api_call_count": 3
   }
 }
