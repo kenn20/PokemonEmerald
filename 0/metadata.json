@@ -1,0 +1,89 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3FZR7QVBAH1SABENYT81WQR",
+  "session_id": "01a0dcbc-5e8a-79b1-8964-2273b4bc8fe2",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-26T23:10:38.956002907Z",
+  "branch": "codex/phase1-pyboy-title-gate",
+  "checkpoints_count": 9,
+  "save_step_count": 2,
+  "files_touched": [
+    ".gitignore",
+    "prototype.py",
+    "pyboy_adapter.py",
+    "pytest.ini",
+    "requirements.txt",
+    "tests/test_phase1.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-terra",
+  "turn_id": "8db5f990788a",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 671459,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 12576256,
+    "output_tokens": 44261,
+    "api_call_count": 122,
+    "subagent_tokens": {
+      "input_tokens": 81024,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 930816,
+      "output_tokens": 4023,
+      "api_call_count": 16
+    },
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-26T23:10:38.79913304Z",
+    "agent_lines": 287,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 287,
+    "total_lines_changed": 287,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 715,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "Replacement.md": 235
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 646,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 645,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    }
+  ]
+}
