@@ -1,0 +1,64 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3GAT6HSBRQTFX83WKP6V5X8",
+  "session_id": "01a0e055-1bb4-7521-bfef-3662dacd909e",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T02:23:57.831472045Z",
+  "branch": "codex/jev-semantic-control",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "jev_policy.py",
+    "jev_sidecar.mts",
+    "prototype.py",
+    "pyboy_adapter.py",
+    "qualification.py",
+    "starter_branch.py",
+    "tests/test_jev_policy.py",
+    "tests/test_phase1.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_branch.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-terra",
+  "turn_id": "aa18d1daadb2",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 427833,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 13999744,
+    "output_tokens": 52434,
+    "api_call_count": 122,
+    "subagent_tokens_complete": false
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-27T02:23:57.728656685Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 715,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "Replacement.md": 235
+      }
+    }
+  ]
+}
