@@ -19,6 +19,8 @@ from qualification import EWRAM_START, visual_fingerprint
 
 
 EWRAM_SIZE = 256 * 1024
+MAX_STEP_FRAMES = 600
+MAX_ROUTE_FRAMES = 30_000
 
 
 class RouteAdapter(Protocol):
@@ -45,14 +47,30 @@ class RouteStep:
     def __post_init__(self) -> None:
         if not self.name:
             raise ValueError("route step name must not be empty")
-        if isinstance(self.frames, bool) or not isinstance(self.frames, int) or self.frames < 0:
-            raise ValueError("route step frames must be a non-negative integer")
+        if (
+            isinstance(self.frames, bool)
+            or not isinstance(self.frames, int)
+            or not 0 <= self.frames <= MAX_STEP_FRAMES
+        ):
+            raise ValueError(
+                f"route step frames must be between 0 and {MAX_STEP_FRAMES}"
+            )
         if isinstance(self.hold_frames, bool) or not isinstance(self.hold_frames, int):
             raise ValueError("route step hold_frames must be an integer")
         if self.key is None and self.hold_frames != 2:
             raise ValueError("wait steps must use the default hold_frames")
         if self.key is not None and self.hold_frames <= 0:
             raise ValueError("input steps require at least one hold frame")
+        if self.frame_cost > MAX_STEP_FRAMES:
+            raise ValueError(
+                f"route step frame cost must not exceed {MAX_STEP_FRAMES}"
+            )
+
+    @property
+    def frame_cost(self) -> int:
+        """Actual emulator frames consumed by this step."""
+
+        return self.frames + (self.hold_frames if self.key is not None else 0)
 
 
 @dataclass(frozen=True)
@@ -76,6 +94,7 @@ class RamDifference:
 def run_route(adapter: RouteAdapter, steps: Sequence[RouteStep]) -> tuple[RouteCheckpoint, ...]:
     """Execute a named route and capture a visible checkpoint after each step."""
 
+    validate_route(steps)
     checkpoints: list[RouteCheckpoint] = []
     for step in steps:
         if step.key is None:
@@ -91,6 +110,18 @@ def run_route(adapter: RouteAdapter, steps: Sequence[RouteStep]) -> tuple[RouteC
             )
         )
     return tuple(checkpoints)
+
+
+def validate_route(steps: Sequence[RouteStep]) -> None:
+    """Reject empty or over-budget routes before they advance the emulator."""
+
+    if not steps:
+        raise ValueError("route must contain at least one step")
+    total_frames = sum(step.frame_cost for step in steps)
+    if total_frames > MAX_ROUTE_FRAMES:
+        raise ValueError(
+            f"route frame budget exceeded: {total_frames} > {MAX_ROUTE_FRAMES}"
+        )
 
 
 def snapshot_ewram(adapter: RouteAdapter) -> bytes:
@@ -137,7 +168,9 @@ def load_route(path: Path) -> tuple[RouteStep, ...]:
                 hold_frames=item.get("hold_frames", 2),
             )
         )
-    return tuple(steps)
+    route = tuple(steps)
+    validate_route(route)
+    return route
 
 
 def build_parser() -> argparse.ArgumentParser:

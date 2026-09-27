@@ -8,7 +8,16 @@ import pytest
 
 from pyboy_adapter import GbaKey
 from qualification import EWRAM_START
-from starter_route import EWRAM_SIZE, RouteStep, diff_ewram, load_route, run_route, snapshot_ewram
+from starter_route import (
+    EWRAM_SIZE,
+    MAX_ROUTE_FRAMES,
+    MAX_STEP_FRAMES,
+    RouteStep,
+    diff_ewram,
+    load_route,
+    run_route,
+    snapshot_ewram,
+)
 
 
 class FakeRouteAdapter:
@@ -40,6 +49,24 @@ def test_run_route_records_named_checkpoints() -> None:
     assert [item.name for item in checkpoints] == ["wait", "confirm"]
     assert checkpoints[-1].frame_count == 9
     assert adapter.keys == [GbaKey.A]
+
+
+def test_route_step_rejects_excessive_actual_frame_cost() -> None:
+    with pytest.raises(ValueError, match=str(MAX_STEP_FRAMES)):
+        RouteStep("wait", None, MAX_STEP_FRAMES + 1)
+    with pytest.raises(ValueError, match="frame cost"):
+        RouteStep("hold", GbaKey.A, MAX_STEP_FRAMES, hold_frames=1)
+
+
+def test_run_route_rejects_over_budget_before_advancing() -> None:
+    adapter = FakeRouteAdapter()
+    steps = tuple(
+        RouteStep(f"wait-{index}", None, MAX_STEP_FRAMES)
+        for index in range(MAX_ROUTE_FRAMES // MAX_STEP_FRAMES + 1)
+    )
+    with pytest.raises(ValueError, match="budget exceeded"):
+        run_route(adapter, steps)
+    assert adapter.frame_count == 0
 
 
 def test_snapshot_and_diff_ewram_capture_each_changed_byte() -> None:
