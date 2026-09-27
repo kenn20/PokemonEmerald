@@ -55,6 +55,20 @@ class PyBoyAdvance:
 
         return self._frame_count
 
+    def timing_checkpoint(self) -> int:
+        """Read the backend's public, non-mutating emulation cycle counter."""
+
+        reader = getattr(self._emulator, "timing_checkpoint", None)
+        if not callable(reader):
+            raise BackendCapabilityError(
+                "installed PyBoy backend does not expose timing_checkpoint; "
+                "install the SHA-pinned fork"
+            )
+        value = reader()
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise BackendCapabilityError("backend timing_checkpoint did not return an integer")
+        return value
+
     def frame(self, count: int = 1) -> None:
         """Advance exactly ``count`` frames and update the adapter counter."""
 
@@ -122,49 +136,45 @@ class PyBoyAdvance:
             self.release(key)
         self.frame(settle_frames)
 
-    def read_u8(self, address: int) -> int:
-        """Read one byte without exposing a backend memory object."""
+    def peek_u8(self, address: int) -> int:
+        """Read one byte through the backend's non-advancing public API."""
 
-        return self._read(address, 8)
+        return self._peek(address, 8)
 
-    def read_u16(self, address: int) -> int:
-        """Read one little-endian unsigned 16-bit value."""
+    def peek_u16(self, address: int) -> int:
+        """Read one little-endian unsigned 16-bit value without advancing time."""
 
-        return self._read(address, 16)
+        return self._peek(address, 16)
 
-    def read_u32(self, address: int) -> int:
-        """Read one little-endian unsigned 32-bit value."""
+    def peek_u32(self, address: int) -> int:
+        """Read one little-endian unsigned 32-bit value without advancing time."""
 
-        return self._read(address, 32)
+        return self._peek(address, 32)
 
-    def _read(self, address: int, width: int) -> int:
-        if isinstance(address, bool) or not isinstance(address, int) or address < 0:
-            raise ValueError("address must be a non-negative integer")
-        try:
-            from pyboy_advance.memory.constants import MemoryAccess
-        except ImportError as exc:  # pragma: no cover - backend-dependent
-            raise RuntimeError("PyBoy Advance memory access is unavailable") from exc
-        memory = self._memory()
-        reader = getattr(memory, f"read_{width // 8}", None)
+    def _peek(self, address: int, width: int) -> int:
+        reader = getattr(self._emulator, f"peek_u{width}", None)
         if reader is None:
             raise BackendCapabilityError(
-                "installed PyBoy backend does not expose read-only memory telemetry; "
-                "install the pinned source build or use the mGBA adapter"
+                "installed PyBoy backend does not expose the required non-advancing "
+                f"peek_u{width} telemetry API; install the SHA-pinned fork"
             )
-        return int(reader(address, MemoryAccess.NON_SEQUENTIAL))
+        return int(reader(address))
 
     def capabilities(self) -> dict[str, bool]:
         """Report capabilities without pretending missing backend APIs exist."""
 
-        memory = self._memory()
-        backup = getattr(memory, "backup_storage", None)
         return {
             "frames": callable(getattr(self._emulator, "frame", None)),
             "keys": callable(getattr(self._emulator, "press_key", None))
             and callable(getattr(self._emulator, "release_key", None)),
             "pixels": hasattr(self._emulator, "screen"),
-            "read_telemetry": callable(getattr(memory, "read_8", None)),
-            "battery_save": callable(getattr(backup, "save", None)),
+            "read_telemetry": all(
+                callable(getattr(self._emulator, name, None))
+                for name in ("peek_u8", "peek_u16", "peek_u32")
+            ),
+            "timing_telemetry": callable(
+                getattr(self._emulator, "timing_checkpoint", None)
+            ),
         }
 
     def require_capabilities(self, *required: str) -> None:
@@ -173,16 +183,6 @@ class PyBoyAdvance:
             raise BackendCapabilityError(
                 "backend is missing required capabilities: " + ", ".join(missing)
             )
-
-    def _memory(self) -> Any:
-        memory = getattr(self._emulator, "memory", None)
-        if memory is None:
-            cpu = getattr(self._emulator, "cpu", None)
-            memory = getattr(cpu, "memory", None)
-        if memory is None:
-            raise BackendCapabilityError("installed PyBoy backend exposes no memory object")
-        return memory
-
 
 class GbaKey(Enum):
     """The ten physical buttons available on a GBA controller."""

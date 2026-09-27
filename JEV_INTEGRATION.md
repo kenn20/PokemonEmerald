@@ -22,7 +22,8 @@ illegal response is an error and must stop the controller.
 
 ## Emulator gate
 
-Run the repeatability gate before enabling live policy:
+Run the capability/replay gate before enabling live policy. It accepts only the
+SHA-256-pinned BPEE v1.0 ROM:
 
 ```sh
 .venv/bin/python qualification.py \
@@ -30,6 +31,15 @@ Run the repeatability gate before enabling live policy:
   --bios bios/gba_bios.bin --runs 3
 ```
 
-The current installed PyBoy build fails this gate because it exposes no
-read-only memory telemetry. That is an intentional stop signal; it must be
-resolved by a backend build or mGBA adapter before Jev is allowed to choose.
+The SHA-pinned `kenn20/PyBoyAdvance` fork provides public, read-only
+`peek_u8`, `peek_u16`, and `peek_u32` APIs for EWRAM/IWRAM. The gate performs
+1,000 peeks at the checkpoint and rejects any timing or framebuffer change;
+then it requires three fresh emulator instances to produce the same named RAM
+observation and framebuffer fingerprint.
+
+No BPEE v1.0 starter-state map is checked in yet, so this command completes
+the non-timing capability check but exits fail-closed and does not enable Jev.
+Once a checked-in map is validated, the same gate will require three fresh
+runs to agree on its semantic RAM observation and framebuffer fingerprint.
+Battery saves, save states, and starter-menu compilation are outside this
+slice.
