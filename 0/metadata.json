@@ -1,0 +1,76 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3GFPM6T91K6P3HC49511NAY",
+  "session_id": "01a0e055-1bb4-7521-bfef-3662dacd909e",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T03:49:23.771483839Z",
+  "branch": "codex/starter-calibration",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [
+    "starter_route.py",
+    "tests/test_starter_route.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-terra",
+  "turn_id": "3f9fe64b0c88",
+  "checkpoint_transcript_start": 1370,
+  "transcript_lines_at_start": 1370,
+  "compact_transcript_start": 170,
+  "token_usage": {
+    "input_tokens": 10633,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 846592,
+    "output_tokens": 2767,
+    "api_call_count": 6,
+    "subagent_tokens": {
+      "input_tokens": 0,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 0,
+      "output_tokens": 0,
+      "api_call_count": 0
+    },
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 7
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-27T03:49:23.597910078Z",
+    "agent_lines": 64,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 64,
+    "total_lines_changed": 68,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 715,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "Replacement.md": 235
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 422,
+      "agent_lines_removed": 4,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    }
+  ]
+}
