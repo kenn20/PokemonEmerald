@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3G8P1ZWA9YP7XPPQRRQFGP0",
+  "strategy": "manual-commit",
+  "branch": "codex/phase1-pyboy-title-gate",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "jev_policy.py",
+    "jev_sidecar.mts",
+    "prototype.py",
+    "pyboy_adapter.py",
+    "qualification.py",
+    "starter_branch.py",
+    "tests/test_jev_policy.py",
+    "tests/test_phase1.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_branch.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 337619,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8999168,
+    "output_tokens": 37079,
+    "api_call_count": 76,
+    "subagent_tokens": {
+      "input_tokens": 293503,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 2853888,
+      "output_tokens": 18670,
+      "api_call_count": 65
+    },
+    "subagent_tokens_complete": true
+  }
+}

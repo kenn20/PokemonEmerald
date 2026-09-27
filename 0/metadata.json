@@ -1,0 +1,83 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3G8P1ZWA9YP7XPPQRRQFGP0",
+  "session_id": "01a0e055-1bb4-7521-bfef-3662dacd909e",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T01:46:53.463026906Z",
+  "branch": "codex/phase1-pyboy-title-gate",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "jev_policy.py",
+    "jev_sidecar.mts",
+    "prototype.py",
+    "pyboy_adapter.py",
+    "qualification.py",
+    "starter_branch.py",
+    "tests/test_jev_policy.py",
+    "tests/test_phase1.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_branch.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-luna",
+  "turn_id": "3f83a56c86f6",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 337619,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8999168,
+    "output_tokens": 37079,
+    "api_call_count": 76,
+    "subagent_tokens": {
+      "input_tokens": 293503,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 2853888,
+      "output_tokens": 18670,
+      "api_call_count": 65
+    },
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-27T01:46:53.176931333Z",
+    "agent_lines": 703,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 703,
+    "total_lines_changed": 707,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 715,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "Replacement.md": 235
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1061,
+      "agent_lines_removed": 4,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    }
+  ]
+}

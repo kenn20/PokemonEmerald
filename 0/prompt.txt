@@ -1,0 +1,5 @@
+Now, we have the protoype.py. We need to figure out how to start having Jev interact with the game? what else are we missing? Is it too early to integrate now?
+
+---
+
+Now execute
