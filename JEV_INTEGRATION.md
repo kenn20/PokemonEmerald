@@ -41,5 +41,9 @@ No BPEE v1.0 starter-state map is checked in yet, so this command completes
 the non-timing capability check but exits fail-closed and does not enable Jev.
 Once a checked-in map is validated, the same gate will require three fresh
 runs to agree on its semantic RAM observation and framebuffer fingerprint.
-Battery saves, save states, and starter-menu compilation are outside this
-slice.
+`starter_route.py` is the calibration lever for the next slice. It replays a
+named, checked JSON input route and emits every EWRAM byte changed by one
+selected action; use it to prove the starter phase, current Poké Ball, and
+post-choice species fields before checking the map in. `starter_episode.py`
+uses `RecordedPolicy` only. Live Jev stays disabled until that route and map
+pass the replay gate.
