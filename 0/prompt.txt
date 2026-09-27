@@ -1,0 +1,37 @@
+Help me understand: https://github.com/christianmat/jev-pokemon to port over Pokemon Emerald, how much more complicated? Generate a HTML diagram. I am interested to know 1) what is the each state that is possible 2) how the state gets fed into JEV, 3) how the JEV decides? What is the decision logic? 4) I want to udnerstand the CORE of the harness. What does it do, and how does it bridge between the game emulator, to the typed decisions that JEV can handle.  https://github.com/mgba-emu/mgba. https://mgba.io/docs/scripting.html, explore the EXISTIGN bridge. If need to, also explore outside, and on github.com. +
+
+---
+
+Hmmm, could we actually just do a git pull?
+
+---
+
+I meant, could we just, gitclone the Jev hardness for Pokemon Red, and just slightly adapt it for Pokemon Emerald?
+
+---
+
+create a Replacement.md file, and then launch a subagent to critique it... I feel like it wont be that simple?
+
+---
+
+Tchnically speaking, we could replace mGBA with https://www.npmjs.com/package/serverboy? Like ServerBoy would be able to read GBA? Main concern: Gameboy !== gameboya dvance, and Pokemon Emerald is a GBA ROM game...
+
+---
+
+research this: https://github.com/williamckha/PyBoyAdvance. Update Reeplacement MD on difficulty of mGBA vs PyBoyAdvance
+
+---
+
+ssorry, what about updating the html?
+
+---
+
+if we just use PyBoyAdvance for a prototype, wouldnt that be easier to code compared to mGBA? Lua and thing would be too complicated. If we fully leverage PyBoyAdvance, then we should be able to get it up and running?
+
+---
+
+Now, wouldnt that be similar to how Jev Plays Pokemon Red work?
+
+---
+
+Now, update the Replacement and the html, detailing how we can leverage it, and TRY TO KEEP MINIMAL CODE CHANGES REQUIRED! I do not want to code alot of the things...

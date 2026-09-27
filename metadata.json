@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3JJQTCBP25E86RF5D3NF6JD",
+  "strategy": "manual-commit",
+  "branch": "codex/starter-calibration",
+  "checkpoints_count": 9,
+  "files_touched": [
+    "EMERALD_JEV_HARNESS_ARCHITECTURE.html",
+    "Pokemon - Emerald Version (USA, Europe).zip",
+    "Pokemon - Emerald Version (USA, Europe).zip:Zone.Identifier",
+    "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba",
+    "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba:Zone.Identifier",
+    "Replacement.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 222917,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8036864,
+    "output_tokens": 30882,
+    "api_call_count": 77,
+    "subagent_tokens": {
+      "input_tokens": 405973,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 3059456,
+      "output_tokens": 20571,
+      "api_call_count": 69
+    },
+    "subagent_tokens_complete": true
+  }
+}
