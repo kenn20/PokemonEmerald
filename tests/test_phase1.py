@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 import prototype
+from pyboy_adapter import GbaKey, PyBoyAdvance
 
 
 def test_missing_rom_is_reported(tmp_path: Path) -> None:
@@ -59,3 +60,27 @@ def test_fake_adapter_frame_counter() -> None:
     assert result["framebuffer_dimensions"] == {"width": 240, "height": 160}
     assert result["framebuffer_width"] == 240
     assert result["framebuffer_height"] == 160
+
+
+def test_input_adapter_tap_releases_key_after_frame_error() -> None:
+    class FailingBackend:
+        def __init__(self) -> None:
+            self.pressed: list[object] = []
+            self.released: list[object] = []
+
+        def frame(self, count: int = 1) -> None:
+            raise RuntimeError("backend failed")
+
+        def press_key(self, key: object) -> None:
+            self.pressed.append(key)
+
+        def release_key(self, key: object) -> None:
+            self.released.append(key)
+
+    adapter = object.__new__(PyBoyAdvance)
+    adapter._emulator = FailingBackend()
+    adapter._frame_count = 0
+    with pytest.raises(RuntimeError, match="backend failed"):
+        adapter.tap(GbaKey.A)
+    assert len(adapter._emulator.pressed) == 1
+    assert len(adapter._emulator.released) == 1

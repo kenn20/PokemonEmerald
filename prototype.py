@@ -11,7 +11,7 @@ from typing import Protocol
 import numpy as np
 from PIL import Image
 
-from pyboy_adapter import PyBoyAdvance
+from pyboy_adapter import GbaKey, PyBoyAdvance
 
 
 BIOS_SIZE = 16 * 1024
@@ -29,6 +29,12 @@ class FrameAdapter(Protocol):
     def frame(self, count: int = 1) -> None: ...
 
     def pixels(self) -> np.ndarray: ...
+
+
+class InputAdapter(FrameAdapter, Protocol):
+    def tap(self, key: GbaKey, hold_frames: int = 1, settle_frames: int = 1) -> None: ...
+
+    def reset(self) -> None: ...
 
 
 def sha256_file(path: Path) -> str:

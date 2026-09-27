@@ -1,3 +1,3 @@
-pyboy-advance @ git+https://github.com/williamckha/PyBoyAdvance.git@f2ff0ec6657964b9fffdbbdeeecee7043385c2a8
+pyboy-advance @ git+https://github.com/kenn20/PyBoyAdvance.git@1404a743ddeaea32cd3add5e182e02db95282f25
 numpy>=1.26,<3
 Pillow>=10,<13
