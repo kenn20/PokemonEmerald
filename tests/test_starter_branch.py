@@ -4,7 +4,15 @@ import pytest
 
 from jev_policy import RecordedPolicy
 from pyboy_adapter import GbaKey
-from starter_branch import StarterObservation, choose_starter, compile_cursor_move
+from starter_branch import (
+    StarterLayout,
+    StarterObservation,
+    choose_starter,
+    compile_pokeball_move,
+)
+
+
+LAYOUT = StarterLayout(("TREECKO", "TORCHIC", "MUDKIP"))
 
 
 def test_starter_choice_is_semantic_and_legal() -> None:
@@ -17,16 +25,21 @@ def test_starter_choice_is_semantic_and_legal() -> None:
     ("cursor", "target", "expected"),
     [
         (0, "TREECKO", [GbaKey.A]),
-        (0, "TORCHIC", [GbaKey.DOWN, GbaKey.A]),
-        (2, "TREECKO", [GbaKey.UP, GbaKey.UP, GbaKey.A]),
+        (0, "TORCHIC", [GbaKey.RIGHT, GbaKey.A]),
+        (2, "TREECKO", [GbaKey.LEFT, GbaKey.LEFT, GbaKey.A]),
     ],
 )
-def test_compile_cursor_move_is_relative(
+def test_compile_pokeball_move_is_relative(
     cursor: int, target: str, expected: list[GbaKey]
 ) -> None:
-    assert compile_cursor_move(cursor, target) == expected
+    assert compile_pokeball_move(cursor, target, LAYOUT) == expected
 
 
-def test_compile_cursor_move_rejects_unknown_option() -> None:
+def test_compile_pokeball_move_rejects_unknown_option() -> None:
     with pytest.raises(ValueError, match="unknown starter"):
-        compile_cursor_move(0, "PIKACHU")
+        compile_pokeball_move(0, "PIKACHU", LAYOUT)
+
+
+def test_starter_layout_rejects_missing_or_duplicate_starters() -> None:
+    with pytest.raises(ValueError, match="each legal starter"):
+        StarterLayout(("TREECKO", "TREECKO", "MUDKIP"))

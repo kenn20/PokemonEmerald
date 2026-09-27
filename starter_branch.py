@@ -16,6 +16,18 @@ STARTER_OPTIONS = (
 
 
 @dataclass(frozen=True)
+class StarterLayout:
+    """Measured left-to-right order of Birch's three physical Poké Balls."""
+
+    option_ids: tuple[str, str, str]
+
+    def __post_init__(self) -> None:
+        expected = {option.option_id for option in STARTER_OPTIONS}
+        if set(self.option_ids) != expected or len(set(self.option_ids)) != len(self.option_ids):
+            raise ValueError("starter layout must contain each legal starter exactly once")
+
+
+@dataclass(frozen=True)
 class StarterObservation:
     """Stable, typed projection of the starter-menu observation."""
 
@@ -40,14 +52,15 @@ def choose_starter(
     return validate_choice(choice, STARTER_OPTIONS)
 
 
-def compile_cursor_move(current_index: int, target_id: str) -> list[GbaKey]:
-    """Compile a vertical starter choice into relative D-pad input."""
+def compile_pokeball_move(
+    current_index: int, target_id: str, layout: StarterLayout
+) -> list[GbaKey]:
+    """Compile a validated physical Poké Ball choice into LEFT/RIGHT then A."""
 
-    if not 0 <= current_index < len(STARTER_OPTIONS):
+    if not 0 <= current_index < len(layout.option_ids):
         raise ValueError(f"cursor index out of range: {current_index}")
-    targets = {option.option_id: index for index, option in enumerate(STARTER_OPTIONS)}
-    if target_id not in targets:
+    if target_id not in layout.option_ids:
         raise ValueError(f"unknown starter option: {target_id}")
-    delta = targets[target_id] - current_index
-    key = GbaKey.DOWN if delta > 0 else GbaKey.UP
+    delta = layout.option_ids.index(target_id) - current_index
+    key = GbaKey.RIGHT if delta > 0 else GbaKey.LEFT
     return [key] * abs(delta) + [GbaKey.A]
