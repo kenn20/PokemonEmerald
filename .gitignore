@@ -1,0 +1,17 @@
+# User-local emulator inputs and state.
+bios/
+Pokemon - Emerald Version (USA, Europe)/
+*.sav
+*.sgm
+*.state
+*.state.*
+
+# Generated screenshots and run reports.
+artifacts/
+
+# Python caches and local environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
