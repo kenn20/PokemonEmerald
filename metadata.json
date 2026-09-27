@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3GC4RTT58KH8T3MYXNAY08Z",
+  "strategy": "manual-commit",
+  "branch": "codex/jev-semantic-control",
+  "checkpoints_count": 4,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "pyboy_adapter.py",
+    "qualification.py",
+    "requirements.txt",
+    "tests/test_pyboy_adapter.py",
+    "tests/test_qualification.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 164706,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5382400,
+    "output_tokens": 37019,
+    "api_call_count": 63,
+    "subagent_tokens_complete": true
+  }
+}

@@ -1,0 +1,40 @@
+A previous agent produced the plan below to accomplish the user's task. Implement the plan in a fresh context. Treat the plan as the source of user intent, re-read files as needed, and carry the work through implementation and verification.
+
+# PyBoyAdvance-only Jev path
+
+## Summary
+
+Make PyBoyAdvance the sole emulator dependency. Remove mGBA as a fallback from the tracked integration surface; Jev remains disabled until PyBoy provides non-timing RAM telemetry and the starter checkpoint replays identically from fresh processes.
+
+## Implementation
+
+- Create the project-owned `kenn20/PyBoyAdvance` fork from the currently pinned upstream SHA.
+- Add read-only `peek_u8/u16/u32` APIs, restricted to EWRAM/IWRAM. They must read backing memory directly and never advance scheduler time; do not expose writes or generic backend objects.
+- Pin `requirements.txt` to the fork SHA. Update `pyboy_adapter.py` to use only these public `peek_*` APIs and remove mGBA wording/fallbacks from `JEV_INTEGRATION.md`.
+- Add a reusable PyBoy capability probe that records ROM identity, verifies 1,000 peeks do not alter the framebuffer/timing checkpoint, and emits a fail-closed result.
+- Keep battery-save/load and save states out of this slice. Replace the starter compiler’s incorrect vertical-menu assumption only after the RAM-backed starter-state map is validated for the pinned BPEE v1.0 ROM (`a9dec84d…19085af`).
+
+## Tests
+
+- Fork tests: valid EWRAM/IWRAM peeks, little-endian widths, rejected out-of-range addresses, and no write API.
+- Consumer tests: adapter capability detection and error paths.
+- Live gate: three fresh Emerald runs reach the same checkpoint, return the same semantic RAM observation, and produce the same framebuffer fingerprint.
+- Run `.venv/bin/python -m pytest -q` and the new capability/replay probe before enabling Jev.
+
+## Assumptions
+
+- Fork: `kenn20/PyBoyAdvance`; dependency remains SHA-pinned.
+- Safety invariant confirmed: Jev may act only after live RAM telemetry and fresh-process replay pass.
+- Existing untracked architecture documents are preserved; only tracked integration material changes.
+
+---
+
+test that now with the current emulator, does it owrk now?
+
+---
+
+do we need to create a PR on either our PokemonEmerald or on other repo?
+
+---
+
+hmmm, create a PR for pokemonEmerald, what changes u have?
