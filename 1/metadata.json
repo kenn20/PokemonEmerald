@@ -1,0 +1,72 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3N7HKG1R5C3V2FDYK4DPP97",
+  "session_id": "01a0e56b-78e8-75b1-bbdd-7022953afa31",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-29T00:03:03.538065644Z",
+  "branch": "codex/starter-calibration",
+  "checkpoints_count": 2,
+  "save_step_count": 2,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "qualification.py",
+    "starter_acceptance.py",
+    "starter_branch.py",
+    "starter_episode.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_episode.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-luna",
+  "turn_id": "ceacbf501d48",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 185934,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6052480,
+    "output_tokens": 25826,
+    "api_call_count": 81,
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-29T00:03:03.430280526Z",
+    "agent_lines": 585,
+    "agent_removed": 35,
+    "human_added": 418,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1003,
+    "total_lines_changed": 1050,
+    "agent_percentage": 59.04761904761905,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 715,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "Replacement.md": 235
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 582,
+      "agent_lines_removed": 12,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    }
+  ]
+}

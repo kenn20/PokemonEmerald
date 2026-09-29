@@ -1,0 +1,90 @@
+A previous agent produced the plan below to accomplish the user's task. Implement the plan in a fresh context. Treat the plan as the source of user intent, re-read files as needed, and carry the work through implementation and verification.
+
+
+## 1. Run one temporary calibration
+
+Use a route under `/tmp` or an interactive recorder to discover:
+
+- starter-selection screen checkpoint;
+- cursor field and physical ball order;
+- selected-species/post-choice field;
+- deterministic frame/RAM results across three fresh runs.
+
+Do not commit `starter_route.json`.
+
+## 2. Promote only the evidence
+
+Add the validated named RAM fields to `qualification.py`. Keep the route itself disposable or archive it outside the production path.
+
+The qualification command must then pass three fresh-run replays.
+
+## 3. Connect Jev to the qualified loop
+
+Update the episode controller to accept `PolicyClient`:
+
+1. PyBoy reaches the qualified starter state.
+2. Read-only RAM becomes `StarterObservation`.
+3. Send only semantic state and legal options to Jev.
+4. Validate Jev’s option ID.
+5. Compile it into controller-owned directional/A input.
+6. Verify the selected species/postcondition.
+7. Log the decision and verification result.
+
+## 4. Acceptance test
+
+Jev is considered operational only when it can choose a starter in three fresh emulator runs, with the intended species verified each time. Until then, live Jev remains fail-closed.
+
+---
+
+Continue the Pokémon Emerald Jev integration from the current repository state.
+
+Goal: reach Birch’s starter-selection screen, validate its RAM contract, then prove Jev can select and verify a starter in three fresh emulator runs.
+
+First, build or improve a rerunnable calibration harness. Use a disposable route under /tmp; do not commit the route. Each run must start a fresh emulator and navigate end to end:
+
+Boot through the BIOS and title screen.
+Select New Game.
+Complete gender/name prompts.
+Navigate the moving truck, bedroom, house, and Littleroot Town.
+Enter Professor Birch’s lab.
+Stop at the three starter Poké Balls.
+
+At that checkpoint, capture a screenshot and read-only EWRAM snapshots. Identify and validate:
+
+starter-screen phase/checkpoint field;
+current cursor field;
+physical left-to-right Poké Ball order;
+selected species or post-choice party/species field.
+
+Repeat the exact route in three fresh emulator instances. Do not promote any RAM address unless the visible checkpoint, route behavior, and RAM values agree across all three runs. Remove or leave provisional addresses clearly marked; never present unvalidated addresses as production fields.
+
+Update qualification.py so its qualification command runs the validated route and requires three matching fresh-run results. It must fail closed if the ROM, emulator capabilities, screenshot, route, or RAM observations do not match.
+
+Then connect the qualified loop to Jev:
+
+The episode controller must accept PolicyClient.
+
+Read only the validated RAM fields and construct StarterObservation.
+
+Send Jev only semantic state and legal options:
+TREECKO, TORCHIC, and MUDKIP.
+
+Never send raw addresses, framebuffer data, or controller keys to Jev.
+
+Validate Jev’s returned option ID.
+
+Compile the semantic choice into controller-owned directional/A input.
+
+Execute the input.
+
+Verify the selected species using the validated postcondition field or party data.
+
+Log the semantic state, legal options, Jev choice, compiled action, and verification result as JSONL.
+
+Keep live Jev fail-closed on missing configuration, invalid responses, route divergence, or failed verification.
+
+Use the real Jev sidecar configured through JEV_COMMAND for the live test. Retain RecordedPolicy for deterministic unit tests.
+
+Acceptance gate: run the complete Jev-controlled flow three times from fresh emulator instances. Jev is operational only if the intended species is selected and verified in all three runs. Otherwise report the exact failing checkpoint and leave live Jev disabled.
+
+Run the full test suite, the qualification command, and the three-run Jev acceptance command. Report the exact commands and pass/fail output. Do not claim completion based only on unit tests or a title-screen checkpoint.. LEt me know what is the required keys u needed??
