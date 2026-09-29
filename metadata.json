@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3N7HKG1R5C3V2FDYK4DPP97",
+  "strategy": "manual-commit",
+  "branch": "codex/starter-calibration",
+  "checkpoints_count": 4,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "qualification.py",
+    "starter_branch.py",
+    "starter_episode.py",
+    "starter_route.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_episode.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 67814,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 726272,
+    "output_tokens": 8335,
+    "api_call_count": 19,
+    "subagent_tokens_complete": true
+  }
+}

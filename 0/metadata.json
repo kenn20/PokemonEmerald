@@ -1,0 +1,111 @@
+{
+  "cli_version": "0.11.2",
+  "checkpoint_id": "01M3N7HKG1R5C3V2FDYK4DPP97",
+  "session_id": "01a0e4c6-4b6b-7970-8bad-75c2ae78ca63",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-29T00:03:02.597661489Z",
+  "branch": "codex/starter-calibration",
+  "checkpoints_count": 4,
+  "save_step_count": 4,
+  "files_touched": [
+    "JEV_INTEGRATION.md",
+    "qualification.py",
+    "starter_branch.py",
+    "starter_episode.py",
+    "starter_route.py",
+    "tests/test_qualification.py",
+    "tests/test_starter_episode.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-terra",
+  "turn_id": "00eefa87cca8",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 67814,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 726272,
+    "output_tokens": 8335,
+    "api_call_count": 19,
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-29T00:03:02.474369056Z",
+    "agent_lines": 49,
+    "agent_removed": 1,
+    "human_added": 180,
+    "human_modified": 44,
+    "human_removed": 0,
+    "total_committed": 273,
+    "total_lines_changed": 276,
+    "agent_percentage": 18.115942028985508,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1401,
+      "user_lines_removed": 44,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269,
+        "EMERALD_JEV_HARNESS_ARCHITECTURE.html": 123,
+        "JEV_INTEGRATION.md": 14,
+        "Replacement.md": 235,
+        "make_starter_route.py": 87,
+        "qualification.py": 196,
+        "starter_acceptance.py": 90,
+        "starter_branch.py": 2,
+        "starter_episode.py": 96,
+        "starter_route.py": 153,
+        "tests/test_qualification.py": 2,
+        "tests/test_starter_episode.py": 46
+      },
+      "user_removed_per_file": {
+        "JEV_INTEGRATION.md": 7,
+        "qualification.py": 17,
+        "starter_episode.py": 2,
+        "starter_route.py": 10,
+        "tests/test_qualification.py": 7,
+        "tests/test_starter_episode.py": 1
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1044,
+      "agent_lines_removed": 44,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1044,
+      "agent_lines_removed": 44,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 357,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1044,
+      "agent_lines_removed": 44,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".opencode/plugins/entire.ts": 269
+      }
+    }
+  ]
+}
