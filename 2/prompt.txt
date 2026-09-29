@@ -1,0 +1,85 @@
+A previous agent produced the plan below to accomplish the user's task. Implement the plan in a fresh context. Treat the plan as the source of user intent, re-read files as needed, and carry the work through implementation and verification.
+
+# Pokémon Emerald Jev starter integration
+
+## Summary
+
+Build a disposable, end-to-end calibration route that reaches Birch’s lab, validates the visible starter checkpoint and RAM contract across three fresh emulator runs, then promotes only matching fields. Keep the current production map empty until that evidence exists.
+
+Current evidence is insufficient: the existing probe stops at the title screen, so Jev must remain disabled.
+
+## Required access
+
+- ROM and BIOS are already present and hash-valid.
+- Clone/install `christianmat/jev-pokemon`; configure `JEV_PROJECT`.
+- Set `AI_GATEWAY_API_KEY` locally. Do not paste it into chat or commit it.
+- Node/npm/npx are available; install the Jev project dependencies and use its local `tsx`.
+- No additional emulator “keys” are needed from you; the route uses the existing `GbaKey` mapping.
+
+## Implementation
+
+- Extend the calibration harness to:
+  - Execute a JSON route from a fresh emulator.
+  - Capture named screenshots and full read-only EWRAM at the Birch checkpoint.
+  - Capture before/after RAM snapshots for cursor movement and starter confirmation.
+  - Record route frame counts, framebuffer hashes, RAM observations, and divergence reasons.
+- Create the complete disposable `/tmp` route covering:
+  - BIOS/title → New Game → gender/name → truck → bedroom/house → Littleroot → Birch’s lab → starter balls.
+- Repeat the exact route three times and promote fields only when:
+  - The named visual checkpoint matches.
+  - Route checkpoints and frame counts match.
+  - Candidate RAM fields match.
+  - Cursor movement changes only the validated cursor field.
+  - Selecting a ball yields the validated species/postcondition.
+- Update `qualification.py` to require `--route`, run three fresh route replays, validate screenshot/RAM evidence, and fail closed on any mismatch.
+- Connect `starter_episode.py` to the validated map and `PolicyClient`; expose only semantic state and legal starter IDs to Jev, compile the returned ID to controller input, verify species, and log JSONL.
+- Keep `RecordedPolicy` tests and reject missing `JEV_COMMAND`, invalid Jev responses, route divergence, and failed verification.
+
+## Verification commands
+
+```sh
+.venv/bin/pytest -q
+
+.venv/bin/python qualification.py \
+  --rom "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba" \
+  --bios bios/gba_bios.bin \
+  --route /tmp/starter_route.json \
+  --runs 3
+
+JEV_PROJECT=/path/to/jev-pokemon \
+AI_GATEWAY_API_KEY="$AI_GATEWAY_API_KEY" \
+JEV_COMMAND="npx --prefix /path/to/jev-pokemon tsx /path/to/PokemonEmerald/jev_sidecar.mts" \
+.venv/bin/python starter_acceptance.py \
+  --rom "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba" \
+  --bios bios/gba_bios.bin \
+  --route /tmp/starter_route.json \
+  --log /tmp/emerald-jev-decisions.jsonl \
+  --expected-species MUDKIP \
+  --runs 3
+```
+
+Completion requires three verified species results from the real Jev sidecar. Otherwise report the exact failing route/checkpoint and leave the validated map empty.
+
+---
+
+What is the blocker here? How can I test
+
+---
+
+how can i view it in live? I think the emulator screen would pop up right?
+
+---
+
+how can i run it with the ui?
+
+---
+
+Now what is the blocker?
+
+---
+
+open the png for me
+
+---
+
+save it to this folder

@@ -3,9 +3,11 @@
   "checkpoint_id": "01M3N7HKG1R5C3V2FDYK4DPP97",
   "strategy": "manual-commit",
   "branch": "codex/starter-calibration",
-  "checkpoints_count": 6,
+  "checkpoints_count": 12,
   "files_touched": [
     "JEV_INTEGRATION.md",
+    "birch_starter.png",
+    "make_starter_route.py",
     "qualification.py",
     "starter_acceptance.py",
     "starter_branch.py",
@@ -28,14 +30,21 @@
       "compact_transcript": "/1/transcript.jsonl",
       "content_hash": "/1/content_hash.txt",
       "prompt": "/1/prompt.txt"
+    },
+    {
+      "metadata": "/2/metadata.json",
+      "transcript": "/2/full.jsonl",
+      "compact_transcript": "/2/transcript.jsonl",
+      "content_hash": "/2/content_hash.txt",
+      "prompt": "/2/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 253748,
+    "input_tokens": 514706,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 6778752,
-    "output_tokens": 34161,
-    "api_call_count": 100,
+    "cache_read_tokens": 12251008,
+    "output_tokens": 61755,
+    "api_call_count": 167,
     "subagent_tokens_complete": true
   }
 }
