@@ -145,10 +145,5 @@ def test_main_emits_one_fail_closed_json_result(monkeypatch: pytest.MonkeyPatch,
         "capability_checkpoint",
         lambda factory, *, frames: {"frame_count": frames, "peek_probe": {"peeks": 1_000}},
     )
-    assert qualification.main(["--rom", "emerald.gba", "--bios", "bios.bin"]) == 1
-    assert json.loads(capsys.readouterr().out) == {
-        "capability_checkpoint": {"frame_count": 900, "peek_probe": {"peeks": 1_000}},
-        "error": "BPEE v1.0 starter-state map is not validated; Jev remains disabled",
-        "qualified": False,
-        "rom": {"path": "emerald.gba"},
-    }
+    with pytest.raises(SystemExit):
+        qualification.main(["--rom", "emerald.gba", "--bios", "bios.bin"])

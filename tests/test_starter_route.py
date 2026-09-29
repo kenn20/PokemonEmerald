@@ -12,9 +12,12 @@ from starter_route import (
     EWRAM_SIZE,
     MAX_ROUTE_FRAMES,
     MAX_STEP_FRAMES,
+    RouteEvidence,
+    RouteSpec,
     RouteStep,
     diff_ewram,
     load_route,
+    run_route_with_evidence,
     run_route,
     snapshot_ewram,
 )
@@ -49,6 +52,32 @@ def test_run_route_records_named_checkpoints() -> None:
     assert [item.name for item in checkpoints] == ["wait", "confirm"]
     assert checkpoints[-1].frame_count == 9
     assert adapter.keys == [GbaKey.A]
+
+
+def test_route_evidence_reports_the_step_before_advancing() -> None:
+    adapter = FakeRouteAdapter()
+    spec = RouteSpec(
+        steps=(RouteStep("cursor_before", None, 1),),
+        evidence=RouteEvidence(
+            starter_checkpoint="cursor_before",
+            cursor_before="cursor_before",
+            cursor_after="cursor_before",
+            confirm_before="cursor_before",
+            confirm_after="cursor_after",
+        ),
+    )
+    observed: list[tuple[str, int, int]] = []
+    completed: list[tuple[str, int, int]] = []
+
+    run_route_with_evidence(
+        adapter,
+        spec,
+        before_step=lambda step, index: observed.append((step.name, index, adapter.frame_count)),
+        after_step=lambda step, index: completed.append((step.name, index, adapter.frame_count)),
+    )
+
+    assert observed == [("cursor_before", 1, 0)]
+    assert completed == [("cursor_before", 1, 1)]
 
 
 def test_route_step_rejects_excessive_actual_frame_cost() -> None:

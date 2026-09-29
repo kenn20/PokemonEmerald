@@ -28,8 +28,14 @@ SHA-256-pinned BPEE v1.0 ROM:
 ```sh
 .venv/bin/python qualification.py \
   --rom "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba" \
-  --bios bios/gba_bios.bin --runs 3
+  --bios bios/gba_bios.bin --route /tmp/starter_route.json --runs 3
 ```
+
+Generate the disposable route with `.venv/bin/python make_starter_route.py --output
+/tmp/starter_route.json`. Qualification writes named PNG checkpoints and full
+EWRAM snapshots under `/tmp/emerald-calibration-evidence` by default. A clean
+three-run result is evidence for a human promotion of the map; the checked-in
+map remains empty until that promotion is made from real ROM output.
 
 The SHA-pinned `kenn20/PyBoyAdvance` fork provides public, read-only
 `peek_u8`, `peek_u16`, and `peek_u32` APIs for EWRAM/IWRAM. The gate performs
@@ -37,13 +43,37 @@ The SHA-pinned `kenn20/PyBoyAdvance` fork provides public, read-only
 then it requires three fresh emulator instances to produce the same named RAM
 observation and framebuffer fingerprint.
 
-No BPEE v1.0 starter-state map is checked in yet, so this command completes
-the non-timing capability check but exits fail-closed and does not enable Jev.
-Once a checked-in map is validated, the same gate will require three fresh
-runs to agree on its semantic RAM observation and framebuffer fingerprint.
+The starter-state map remains disabled until the disposable calibration route
+reaches Birch's menu and three fresh runs agree on its named RAM observations
+and framebuffer fingerprint. The live episode is fail-closed in the meantime.
 `starter_route.py` is the calibration lever for the next slice. It replays a
 named, checked JSON input route and emits every EWRAM byte changed by one
 selected action; use it to prove the starter phase, current Poké Ball, and
 post-choice species fields before checking the map in. `starter_episode.py`
-uses `RecordedPolicy` only. Live Jev stays disabled until that route and map
-pass the replay gate.
+supports both `RecordedPolicy` tests and the live `PolicyClient` boundary.
+Once the map is promoted, use `starter_acceptance.py` with the disposable
+route for the three-run Jev acceptance test; it logs the semantic decision
+and species postcondition.
+
+## Human-visible test replay
+
+Append `--ui` to either test command to watch the exact emulator frames and
+named route steps that the test drives. The window is read-only: controller
+input still comes only from the checked route or Jev policy, and closing it
+before completion fails the run. A successful interactive run keeps its final
+frame open until you close the window.
+
+For a walkthrough rather than real-time playback, add `--ui-pause`. It stops
+after every named route checkpoint; click the visible **Continue** button (or
+press Space) to advance to the next controller action. Each UI run writes its
+screenshots to a new timestamped directory under the evidence directory, so
+an interrupted replay cannot be confused with an earlier run.
+
+```sh
+.venv/bin/python qualification.py \
+  --rom "Pokemon - Emerald Version (USA, Europe)/Pokemon - Emerald Version (USA, Europe).gba" \
+  --bios bios/gba_bios.bin --route /tmp/starter_route.json --runs 3 --ui --ui-pause
+```
+
+After the state map has been promoted, the same `--ui` flag on
+`starter_acceptance.py` also shows the Jev starter-selection input.
