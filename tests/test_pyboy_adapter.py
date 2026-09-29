@@ -68,3 +68,16 @@ def test_adapter_reports_missing_public_peek_capability() -> None:
     backend.timing_checkpoint = None  # type: ignore[method-assign]
     with pytest.raises(BackendCapabilityError, match="timing_checkpoint"):
         adapter.timing_checkpoint()
+
+
+def test_frame_observer_sees_the_completed_batch_without_changing_frame_count() -> None:
+    adapter = adapter_for(PeekBackend())
+    observed: list[tuple[int, tuple[int, ...]]] = []
+    adapter._frame_observer = lambda pixels, frame_count: observed.append(
+        (frame_count, pixels.shape)
+    )
+
+    adapter.frame(3)
+
+    assert adapter.frame_count == 3
+    assert observed == [(3, (160, 240, 3))]

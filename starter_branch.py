@@ -33,6 +33,8 @@ class StarterObservation:
 
     cursor_index: int
     prompt_fingerprint: str
+    phase: int = 1
+    selected_species: int | None = None
 
     def state(self) -> dict[str, object]:
         return {

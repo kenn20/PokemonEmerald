@@ -1,4 +1,4 @@
-"""Small, headless adapter for the PyBoy Advance emulator.
+"""Small adapter for the PyBoy Advance emulator.
 
 The adapter deliberately exposes controller input and read-only telemetry.  It
 does not expose the backend object or any memory-writing operation to callers.
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from enum import Enum, auto
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 
@@ -29,6 +29,7 @@ class PyBoyAdvance:
         bios: str | Path,
         skip_bios: bool = False,
         emulation_speed: float = 0,
+        frame_observer: Callable[[np.ndarray, int], None] | None = None,
     ) -> None:
         try:
             from pyboy_advance import PyBoyAdvance as BackendPyBoyAdvance
@@ -48,6 +49,7 @@ class PyBoyAdvance:
         self._skip_bios = skip_bios
         self._emulation_speed = emulation_speed
         self._frame_count = 0
+        self._frame_observer = frame_observer
 
     @property
     def frame_count(self) -> int:
@@ -76,8 +78,14 @@ class PyBoyAdvance:
             raise TypeError("frame count must be an integer")
         if count < 0:
             raise ValueError("frame count must be non-negative")
+        observer = getattr(self, "_frame_observer", None)
+        if observer is None:
+            self._emulator.frame(count)
+            self._frame_count += count
+            return
         self._emulator.frame(count)
         self._frame_count += count
+        observer(self.pixels(), self._frame_count)
 
     def pixels(self) -> np.ndarray:
         """Return a detached RGB framebuffer with shape ``(160, 240, 3)``."""

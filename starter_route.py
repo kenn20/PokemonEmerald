@@ -8,11 +8,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Protocol, Sequence
+from typing import Any, Callable, Protocol, Sequence
 
 import numpy as np
+from PIL import Image
 
 from pyboy_adapter import GbaKey, PyBoyAdvance
 from qualification import EWRAM_START, visual_fingerprint
@@ -80,6 +82,7 @@ class RouteCheckpoint:
     name: str
     frame_count: int
     framebuffer_sha256: str
+    screenshot: str | None = None
 
 
 @dataclass(frozen=True)
@@ -89,6 +92,41 @@ class RamDifference:
     address: int
     before: int
     after: int
+
+
+@dataclass(frozen=True)
+class RouteEvidence:
+    """Optional named evidence points declared by a disposable route."""
+
+    starter_checkpoint: str
+    cursor_before: str
+    cursor_after: str
+    confirm_before: str
+    confirm_after: str
+
+
+@dataclass(frozen=True)
+class RouteSpec:
+    """A route plus the checkpoint names needed for calibration."""
+
+    steps: tuple[RouteStep, ...]
+    evidence: RouteEvidence
+
+    def checkpoint_names(self) -> set[str]:
+        return {step.name for step in self.steps}
+
+    def validate(self) -> None:
+        validate_route(self.steps)
+        names = self.checkpoint_names()
+        required = {
+            self.evidence.starter_checkpoint,
+            self.evidence.cursor_before,
+            self.evidence.cursor_after,
+            self.evidence.confirm_before,
+        }
+        missing = sorted(required - names)
+        if missing:
+            raise ValueError(f"route evidence names are missing: {missing}")
 
 
 def run_route(adapter: RouteAdapter, steps: Sequence[RouteStep]) -> tuple[RouteCheckpoint, ...]:
@@ -110,6 +148,71 @@ def run_route(adapter: RouteAdapter, steps: Sequence[RouteStep]) -> tuple[RouteC
             )
         )
     return tuple(checkpoints)
+
+
+def run_route_with_evidence(
+    adapter: RouteAdapter,
+    spec: RouteSpec,
+    *,
+    evidence_dir: Path | None = None,
+    before_step: Callable[[RouteStep, int], None] | None = None,
+    after_step: Callable[[RouteStep, int], None] | None = None,
+) -> tuple[tuple[RouteCheckpoint, ...], dict[str, bytes]]:
+    """Replay a route and capture named PNG-adjacent framebuffer/RAM evidence.
+
+    The returned RAM snapshots are complete EWRAM images.  They are kept in
+    memory by the caller so qualification can compare runs without allowing
+    an untrusted route file to choose arbitrary production fields.
+    """
+
+    spec.validate()
+    if evidence_dir is not None:
+        evidence_dir.mkdir(parents=True, exist_ok=True)
+    snapshots: dict[str, bytes] = {}
+    checkpoints: list[RouteCheckpoint] = []
+    for step_index, step in enumerate(spec.steps, start=1):
+        if before_step is not None:
+            before_step(step, step_index)
+        if step.name in {
+            spec.evidence.cursor_before,
+            spec.evidence.confirm_before,
+        }:
+            snapshots[step.name] = snapshot_ewram(adapter)
+            if evidence_dir is not None:
+                (evidence_dir / f"{step.name}.ewram.bin").write_bytes(
+                    snapshots[step.name]
+                )
+        if step.key is None:
+            adapter.frame(step.frames)
+        else:
+            adapter.tap(step.key, hold_frames=step.hold_frames, settle_frames=step.frames)
+        pixels = adapter.pixels()
+        screenshot: str | None = None
+        if evidence_dir is not None:
+            evidence_dir.mkdir(parents=True, exist_ok=True)
+            target = evidence_dir / f"{step.name}.png"
+            Image.fromarray(pixels, "RGB").save(target, format="PNG")
+            screenshot = str(target)
+        checkpoint = RouteCheckpoint(
+            name=step.name,
+            frame_count=adapter.frame_count,
+            framebuffer_sha256=str(visual_fingerprint(pixels)["sha256"]),
+            screenshot=screenshot,
+        )
+        checkpoints.append(checkpoint)
+        if step.name in {
+            spec.evidence.starter_checkpoint,
+            spec.evidence.cursor_after,
+            spec.evidence.confirm_after,
+        }:
+            snapshots[step.name] = snapshot_ewram(adapter)
+            if evidence_dir is not None:
+                (evidence_dir / f"{step.name}.ewram.bin").write_bytes(
+                    snapshots[step.name]
+                )
+        if after_step is not None:
+            after_step(step, step_index)
+    return tuple(checkpoints), snapshots
 
 
 def validate_route(steps: Sequence[RouteStep]) -> None:
@@ -149,8 +252,10 @@ def load_route(path: Path) -> tuple[RouteStep, ...]:
         data = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"cannot read route JSON {path}: {exc}") from exc
+    if isinstance(data, dict):
+        data = data.get("steps")
     if not isinstance(data, list) or not data:
-        raise ValueError("route JSON must be a non-empty list")
+        raise ValueError("route JSON must be a non-empty list or an object with steps")
     steps: list[RouteStep] = []
     for item in data:
         if not isinstance(item, dict):
@@ -173,32 +278,72 @@ def load_route(path: Path) -> tuple[RouteStep, ...]:
     return route
 
 
+def load_route_spec(path: Path) -> RouteSpec:
+    """Load a route and its required calibration evidence names."""
+
+    try:
+        data: Any = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read route JSON {path}: {exc}") from exc
+    if isinstance(data, list):
+        raise ValueError("route JSON must declare evidence checkpoints")
+    if not isinstance(data, dict) or not isinstance(data.get("steps"), list):
+        raise ValueError("route JSON must contain a steps list")
+    evidence = data.get("evidence")
+    if not isinstance(evidence, dict):
+        raise ValueError("route JSON must contain an evidence object")
+    try:
+        spec = RouteSpec(
+            steps=load_route(path),
+            evidence=RouteEvidence(
+                starter_checkpoint=str(evidence["starter_checkpoint"]),
+                cursor_before=str(evidence["cursor_before"]),
+                cursor_after=str(evidence["cursor_after"]),
+                confirm_before=str(evidence["confirm_before"]),
+                confirm_after=str(evidence["confirm_after"]),
+            ),
+        )
+    except KeyError as exc:
+        raise ValueError(f"route evidence is missing {exc.args[0]!r}") from exc
+    spec.validate()
+    return spec
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rom", type=Path, required=True)
     parser.add_argument("--bios", type=Path, required=True)
     parser.add_argument("--route", type=Path, required=True)
     parser.add_argument("--diff-step", required=True)
+    parser.add_argument("--evidence-dir", type=Path)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        steps = load_route(args.route)
+        spec = load_route_spec(args.route)
+        steps = spec.steps
         names = [step.name for step in steps]
         if names.count(args.diff_step) != 1:
             raise ValueError("--diff-step must name exactly one route step")
         adapter = PyBoyAdvance(args.rom, args.bios, skip_bios=False, emulation_speed=0)
         before: bytes | None = None
         after: bytes | None = None
-        checkpoints: list[RouteCheckpoint] = []
-        for step in steps:
-            if step.name == args.diff_step:
-                before = snapshot_ewram(adapter)
-            checkpoints.extend(run_route(adapter, (step,)))
-            if step.name == args.diff_step:
-                after = snapshot_ewram(adapter)
+        checkpoints, snapshots = run_route_with_evidence(
+            adapter, spec, evidence_dir=args.evidence_dir
+        )
+        if args.diff_step in snapshots:
+            before = snapshots[args.diff_step]
+            after_name = next(
+                (name for name in (spec.evidence.cursor_after, spec.evidence.confirm_after)
+                 if name != args.diff_step),
+                None,
+            )
+            if after_name is not None:
+                after = snapshots[after_name]
+        if before is None or after is None:
+            raise ValueError("--diff-step must name a measured before checkpoint")
         assert before is not None and after is not None
         print(
             json.dumps(
@@ -206,6 +351,10 @@ def main(argv: list[str] | None = None) -> int:
                     "checkpoints": [asdict(item) for item in checkpoints],
                     "diff_step": args.diff_step,
                     "ewram_diff": [asdict(item) for item in diff_ewram(before, after)],
+                    "ewram_sha256": {
+                        name: hashlib.sha256(snapshot).hexdigest()
+                        for name, snapshot in snapshots.items()
+                    },
                 },
                 sort_keys=True,
             )
