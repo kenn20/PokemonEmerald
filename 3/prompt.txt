@@ -1,0 +1,101 @@
+For the current project, i want to have a way to run this with UI, so i can verify
+
+---
+
+plan first
+
+---
+
+main problem: i want the UI proof as a way for me as a human to understand where the AI have played the game. does it make sense? I am expecting a command tag, such that we can run the tests from
+
+---
+
+add t hat as a PR
+
+---
+
+wait it didnt launch a aseperate window for me...
+
+---
+
+search locally! it should be in here
+
+---
+
+"\\wsl.localhost\Ubuntu-24.04\home\kennc\Document\Github\PokemonEmerald\Pokemon - Emerald Version (USA, Europe)\Pokemon - Emerald Version (USA, Europe).gba" for the gba: "\\wsl.localhost\Ubuntu-24.04\home\kennc\Document\Github\PokemonEmerald\bios\gba_bios.bin" for the bios
+
+---
+
+its running, but the main problem is that, somehow it didnt launch the title screen, but just a blank white one
+
+---
+
+all i see is white screen?
+
+---
+
+ya still nto working on my end, where is the evidence???
+
+---
+
+is the tmp at root?
+
+---
+
+still white screen for a while.....
+
+---
+
+UITS STILL WHITe, I CANT SEE IT. perhaps the game state is updating but i cant see it
+
+---
+
+\How is it broken??!!! How can we fix it?
+
+---
+
+Man, it was working before!!! We need to keep this or else mGBA would be too complicated...
+
+---
+
+contineu
+
+---
+
+retry? it should be able to?
+
+---
+
+i installed at .venv
+
+---
+
+perfect,m everthing is working. write as a commit and a PR
+
+---
+
+it should be availabgle now; run it
+
+---
+
+i restarted, it should work now?
+
+---
+
+auth is completed?
+
+---
+
+Please retry, clear cache, etc....
+
+---
+
+whats the command to create a PR?
+
+---
+
+do the body as a string
+
+---
+
+whats the branch/worktree location for ur latest changes?
